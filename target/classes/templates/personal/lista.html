@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('personal')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Registro del personal</h2>
+        </section>
+
+        <div th:replace="~{fragments :: flash}"></div>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3 th:text="${editando} ? 'Editar personal' : 'Nuevo personal'">Formulario</h3>
+
+                <form th:if="${editando}" th:action="@{/personal/actualizar}" method="post">
+                    <input type="hidden" th:field="*{personal.id}">
+                    <div class="field">
+                        <label>Nombres</label>
+                        <input type="text" th:field="*{personal.nombres}" required>
+                    </div>
+                    <div class="field">
+                        <label>Cargo</label>
+                        <input type="text" th:field="*{personal.cargo}" required>
+                    </div>
+                    <div class="field">
+                        <label>Turno</label>
+                        <select th:field="*{personal.turno}">
+                            <option value="Mañana">Mañana</option>
+                            <option value="Tarde">Tarde</option>
+                            <option value="Noche">Noche</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a th:href="@{/personal}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+
+                <form th:unless="${editando}" th:action="@{/personal/guardar}" method="post" th:object="${personal}">
+                    <div class="field">
+                        <label>Nombres</label>
+                        <input type="text" th:field="*{nombres}" placeholder="Ej: Ana García" required>
+                    </div>
+                    <div class="field">
+                        <label>Cargo</label>
+                        <input type="text" th:field="*{cargo}" placeholder="Ej: Recepcionista" required>
+                    </div>
+                    <div class="field">
+                        <label>Turno</label>
+                        <select th:field="*{turno}">
+                            <option value="Mañana">Mañana</option>
+                            <option value="Tarde">Tarde</option>
+                            <option value="Noche">Noche</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-panel">
+                <h3>Lista del personal</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Cargo</th>
+                        <th>Turno</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${personales}">
+                        <td th:text="${p.id}"></td>
+                        <td th:text="${p.nombres}"></td>
+                        <td th:text="${p.cargo}"></td>
+                        <td th:text="${p.turno}"></td>
+                        <td>
+                            <a th:href="@{/personal/editar/{id}(id=${p.id})}" class="btn btn-secondary">Editar</a>
+                            <a th:href="@{/personal/eliminar/{id}(id=${p.id})}" class="btn btn-danger"
+                               onclick="return confirm('¿Eliminar este personal?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>

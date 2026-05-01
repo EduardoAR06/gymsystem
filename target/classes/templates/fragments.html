@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:fragment="title(t)" th:text="${t} + ' | GYM SYSTEM'">GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<!-- Fragment: Sidebar -->
+<div th:fragment="sidebar(active)">
+    <aside class="sidebar">
+        <div class="brand">
+            <img th:src="@{/img/logo.png}" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+        </div>
+        <nav class="menu">
+            <a th:href="@{/main}" th:classappend="${active == 'main'} ? 'active'">Inicio</a>
+            <a th:href="@{/contacto}" th:classappend="${active == 'contacto'} ? 'active'">Contacto</a>
+            <a th:href="@{/gestion}" th:classappend="${active == 'gestion'} ? 'active'">Gestión</a>
+            <a th:href="@{/publicidad}" th:classappend="${active == 'publicidad'} ? 'active'">Publicidad</a>
+            <a th:href="@{/miembros}" th:classappend="${active == 'miembros'} ? 'active'">Miembros</a>
+            <a th:href="@{/membresias}" th:classappend="${active == 'membresias'} ? 'active'">Membresías</a>
+            <a th:href="@{/cobros}" th:classappend="${active == 'cobros'} ? 'active'">Cobros</a>
+            <a th:href="@{/personal}" th:classappend="${active == 'personal'} ? 'active'">Personal</a>
+            <a th:href="@{/asistencias}" th:classappend="${active == 'asistencias'} ? 'active'">Asistencias</a>
+            <a th:href="@{/}">Cerrar sesión</a>
+        </nav>
+    </aside>
+</div>
+
+<!-- Fragment: Flash message -->
+<div th:fragment="flash">
+    <div th:if="${mensaje}" class="alert-success" th:text="${mensaje}"></div>
+</div>
+
+</body>
+</html>

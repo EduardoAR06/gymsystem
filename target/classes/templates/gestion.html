@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('gestion')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Gestión del gimnasio</h2>
+        </section>
+        <section class="cards">
+            <article class="card">
+                <h3>Miembros</h3>
+                <p>Control de inscripciones y seguimiento de membresías.</p>
+                <a th:href="@{/miembros}" class="btn btn-primary" style="margin-top:10px;display:inline-block">Ver</a>
+            </article>
+            <article class="card">
+                <h3>Cobros</h3>
+                <p>Registro de pagos pendientes y completados.</p>
+                <a th:href="@{/cobros}" class="btn btn-primary" style="margin-top:10px;display:inline-block">Ver</a>
+            </article>
+            <article class="card">
+                <h3>Personal</h3>
+                <p>Organización del personal por cargo y turno.</p>
+                <a th:href="@{/personal}" class="btn btn-primary" style="margin-top:10px;display:inline-block">Ver</a>
+            </article>
+            <article class="card">
+                <h3>Asistencias</h3>
+                <p>Marcación diaria de ingreso y salida del personal.</p>
+                <a th:href="@{/asistencias}" class="btn btn-primary" style="margin-top:10px;display:inline-block">Ver</a>
+            </article>
+        </section>
+
+        <section class="table-panel">
+            <h3>Resumen de gestión</h3>
+            <table>
+                <thead>
+                <tr><th>Área</th><th>Cantidad</th><th>Detalle</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>Miembros activos</td><td th:text="${totalMiembros}"></td><td>Socios con membresía vigente.</td></tr>
+                <tr><td>Cobros registrados</td><td>S/ <span th:text="${#numbers.formatDecimal(totalCobros,1,2)}"></span></td><td>Pagos registrados.</td></tr>
+                <tr><td>Personal en turno</td><td th:text="${totalPersonal}"></td><td>Personal activo.</td></tr>
+                <tr><td>Asistencias marcadas</td><td th:text="${totalAsistencias}"></td><td>Registros de ingreso.</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+</body>
+</html>
