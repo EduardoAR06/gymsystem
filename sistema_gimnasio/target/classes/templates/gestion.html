@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión | Sistema de Gimnasio</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <img th:src="@{/logo.png}" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>Gestión del gimnasio</p>
+        </div>
+        <a class="nav-link" th:href="@{/main}">Volver al inicio</a>
+    </aside>
+
+    <main class="main-content">
+        <section class="hero">
+            <h2>Gestión del gimnasio</h2>
+            <p>
+                Esta página resume las áreas operativas del gimnasio. Su función es mostrar cómo se organiza el
+                trabajo diario entre atención al cliente, control de membresías, cobros y asistencia del personal.
+            </p>
+        </section>
+
+        <section class="grid">
+            <div class="card">
+                <h3>Atención al cliente</h3>
+                <p>Se registra al miembro, se valida su plan y se orienta sobre promociones vigentes.</p>
+            </div>
+            <div class="card">
+                <h3>Control de membresías</h3>
+                <p>Permite definir tipos de plan, duración, precios y condiciones básicas del servicio.</p>
+            </div>
+            <div class="card">
+                <h3>Seguimiento operativo</h3>
+                <p>Incluye el registro de cobros y la marcación de asistencia del personal del gimnasio.</p>
+            </div>
+        </section>
+
+        <h3 class="section-title">Resumen de áreas de gestión</h3>
+        <section class="table-card">
+            <table>
+                <thead>
+                <tr>
+                    <th>Área</th>
+                    <th>Objetivo</th>
+                    <th>Módulo relacionado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>Recepción</td><td>Registrar a cada nuevo miembro y actualizar sus datos.</td><td>Miembros</td></tr>
+                <tr><td>Administración</td><td>Definir las membresías disponibles para la venta.</td><td>Membresías</td></tr>
+                <tr><td>Caja</td><td>Registrar los cobros y revisar si el pago quedó pendiente o pagado.</td><td>Cobros</td></tr>
+                <tr><td>Recursos humanos</td><td>Controlar al personal activo y sus turnos de trabajo.</td><td>Personal</td></tr>
+                <tr><td>Asistencia</td><td>Registrar hora de ingreso, salida y observaciones del personal.</td><td>Asistencias</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+</body>
+</html>

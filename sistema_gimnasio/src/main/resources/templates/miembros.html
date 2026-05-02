@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Miembros | Sistema de Gimnasio</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/app.js}"></script>
+</head>
+<body>
+<div class="page-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <img th:src="@{/logo.png}" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>CRUD de miembros</p>
+        </div>
+        <a class="nav-link" th:href="@{/main}">Volver al inicio</a>
+    </aside>
+    <main class="main-content">
+        <section class="hero">
+            <h2>Registro de miembros</h2>
+            <p>Entidad principal del sistema para controlar a los clientes del gimnasio.</p>
+        </section>
+
+        <div class="panel-grid">
+            <section class="form-card">
+                <h3 th:text="${formulario.id} != null ? 'Editar miembro' : 'Nuevo miembro'"></h3>
+                <form th:action="@{/miembros/guardar}" th:object="${formulario}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="field-group">
+                        <label>Nombres</label>
+                        <input th:field="*{nombres}" required>
+                    </div>
+                    <div class="field-group">
+                        <label>DNI</label>
+                        <input th:field="*{dni}" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Teléfono</label>
+                        <input th:field="*{telefono}" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Membresía</label>
+                        <select th:field="*{membresia}">
+                            <option th:each="membresia : ${membresiasDisponibles}"
+                                    th:value="${membresia}"
+                                    th:text="${membresia}"></option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label>Estado</label>
+                        <select th:field="*{estado}">
+                            <option value="Activo">Activo</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                        <a class="btn btn-secondary" th:href="@{/miembros}">Limpiar</a>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-card">
+                <h3>Lista de miembros</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>DNI</th>
+                        <th>Teléfono</th>
+                        <th>Membresía</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="miembro : ${miembros}">
+                        <td th:text="${miembro.id}"></td>
+                        <td th:text="${miembro.nombres}"></td>
+                        <td th:text="${miembro.dni}"></td>
+                        <td th:text="${miembro.telefono}"></td>
+                        <td th:text="${miembro.membresia}"></td>
+                        <td>
+                            <span class="badge" th:classappend="${miembro.estado == 'Pendiente'} ? ' pending' : ''"
+                                  th:text="${miembro.estado}"></span>
+                        </td>
+                        <td>
+                            <a class="btn btn-secondary" th:href="@{'/miembros/editar/' + ${miembro.id}}">Editar</a>
+                            <a class="btn btn-danger" th:href="@{'/miembros/eliminar/' + ${miembro.id}}"
+                               onclick="return confirmarEliminacion()">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>
