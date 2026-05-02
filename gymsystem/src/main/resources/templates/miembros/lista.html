@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miembros | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('miembros')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Registro de miembros</h2>
+        </section>
+
+        <div th:replace="~{fragments :: flash}"></div>
+
+        <div class="panel-grid">
+            <!-- Formulario CRUD -->
+            <section class="panel">
+                <h3 th:text="${editando} ? 'Editar miembro' : 'Nuevo miembro'">Formulario de miembro</h3>
+
+                <!-- Formulario Editar -->
+                <form th:if="${editando}" th:action="@{/miembros/actualizar}" method="post">
+                    <input type="hidden" th:field="*{miembro.id}">
+                    <div class="field">
+                        <label>Nombres</label>
+                        <input type="text" th:field="*{miembro.nombres}" required>
+                    </div>
+                    <div class="field">
+                        <label>DNI</label>
+                        <input type="text" th:field="*{miembro.dni}" required>
+                    </div>
+                    <div class="field">
+                        <label>Teléfono</label>
+                        <input type="text" th:field="*{miembro.telefono}">
+                    </div>
+                    <div class="field">
+                        <label>Membresía</label>
+                        <select th:field="*{miembro.membresia}">
+                            <option value="Mensual">Mensual</option>
+                            <option value="Trimestral">Trimestral</option>
+                            <option value="Personalizado">Personalizado</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Estado</label>
+                        <select th:field="*{miembro.estado}">
+                            <option value="Activo">Activo</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a th:href="@{/miembros}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+
+                <!-- Formulario Nuevo -->
+                <form th:unless="${editando}" th:action="@{/miembros/guardar}" method="post" th:object="${miembro}">
+                    <div class="field">
+                        <label>Nombres</label>
+                        <input type="text" th:field="*{nombres}" placeholder="Ej: Juan Pérez" required>
+                    </div>
+                    <div class="field">
+                        <label>DNI</label>
+                        <input type="text" th:field="*{dni}" placeholder="Ej: 70123456" required>
+                    </div>
+                    <div class="field">
+                        <label>Teléfono</label>
+                        <input type="text" th:field="*{telefono}" placeholder="Ej: 987654321">
+                    </div>
+                    <div class="field">
+                        <label>Membresía</label>
+                        <select th:field="*{membresia}">
+                            <option value="Mensual">Mensual</option>
+                            <option value="Trimestral">Trimestral</option>
+                            <option value="Personalizado">Personalizado</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Estado</label>
+                        <select th:field="*{estado}">
+                            <option value="Activo">Activo</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Tabla -->
+            <section class="table-panel">
+                <h3>Lista de miembros</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>DNI</th>
+                        <th>Membresía</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m : ${miembros}">
+                        <td th:text="${m.id}"></td>
+                        <td th:text="${m.nombres}"></td>
+                        <td th:text="${m.dni}"></td>
+                        <td th:text="${m.membresia}"></td>
+                        <td>
+                            <span class="badge" th:classappend="${m.estado == 'Pendiente'} ? 'pending'"
+                                  th:text="${m.estado}"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/miembros/editar/{id}(id=${m.id})}" class="btn btn-secondary">Editar</a>
+                            <a th:href="@{/miembros/eliminar/{id}(id=${m.id})}" class="btn btn-danger"
+                               onclick="return confirm('¿Eliminar este miembro?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>
