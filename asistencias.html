@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencias | Gym System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="img/logo.png" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>Asistencias</p>
+        </div>
+        <nav class="menu">
+            <a href="main.html">Volver al inicio</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Marcacion de asistencia</h2>
+        </section>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3>Formulario de asistencia</h3>
+                <div class="field">
+                    <label>Trabajador</label>
+                    <select>
+                        <option>Rosa Salazar</option>
+                        <option>Victor Diaz</option>
+                        <option>Elena Soto</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Fecha</label>
+                    <input type="text" value="06/04/2026">
+                </div>
+                <div class="field">
+                    <label>Hora de ingreso</label>
+                    <input type="text" value="07:55">
+                </div>
+                <div class="field">
+                    <label>Hora de salida</label>
+                    <input type="text" value="14:00">
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="mostrarMensaje('Asistencia registrada visualmente.')">Guardar</button>
+                </div>
+            </section>
+
+            <section class="table-panel">
+                <h3>Lista de asistencias</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Personal</th>
+                        <th>Fecha</th>
+                        <th>Ingreso</th>
+                        <th>Salida</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>1</td><td>Rosa Salazar</td><td>06/04/2026</td><td>07:55</td><td>14:00</td></tr>
+                    <tr><td>2</td><td>Victor Diaz</td><td>06/04/2026</td><td>14:05</td><td>21:00</td></tr>
+                    <tr><td>3</td><td>Elena Soto</td><td>06/04/2026</td><td>08:00</td><td>15:00</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
