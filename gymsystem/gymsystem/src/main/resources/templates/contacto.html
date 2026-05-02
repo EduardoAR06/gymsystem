@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('contacto')}"></div>
+    <main class="content">
+        <section class="hero">
+            <h2>Contacto</h2>
+        </section>
+        <section class="social-grid">
+            <div class="social-card">
+                <img th:src="@{/img/facebook.png}" alt="Facebook">
+                <p>Facebook</p>
+            </div>
+            <div class="social-card">
+                <img th:src="@{/img/instagram.png}" alt="Instagram">
+                <p>Instagram</p>
+            </div>
+            <div class="social-card">
+                <img th:src="@{/img/twitter.png}" alt="Twitter">
+                <p>Twitter</p>
+            </div>
+            <div class="social-card">
+                <img th:src="@{/img/whatsapp.png}" alt="WhatsApp">
+                <p>WhatsApp</p>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencias | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('asistencias')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Marcación de asistencia</h2>
+        </section>
+
+        <div th:replace="~{fragments :: flash}"></div>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3 th:text="${editando} ? 'Editar asistencia' : 'Nueva asistencia'">Formulario</h3>
+
+                <form th:if="${editando}" th:action="@{/asistencias/actualizar}" method="post">
+                    <input type="hidden" th:field="*{asistencia.id}">
+                    <div class="field">
+                        <label>Trabajador</label>
+                        <select th:field="*{asistencia.trabajador}">
+                            <option th:each="p : ${personales}" th:value="${p.nombres}" th:text="${p.nombres}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Fecha</label>
+                        <input type="text" th:field="*{asistencia.fecha}" placeholder="Ej: 28/04/2026" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de ingreso</label>
+                        <input type="text" th:field="*{asistencia.horaIngreso}" placeholder="Ej: 08:00" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de salida</label>
+                        <input type="text" th:field="*{asistencia.horaSalida}" placeholder="Ej: 16:00">
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a th:href="@{/asistencias}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+
+                <form th:unless="${editando}" th:action="@{/asistencias/guardar}" method="post" th:object="${asistencia}">
+                    <div class="field">
+                        <label>Trabajador</label>
+                        <select th:field="*{trabajador}">
+                            <option th:each="p : ${personales}" th:value="${p.nombres}" th:text="${p.nombres}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Fecha</label>
+                        <input type="text" th:field="*{fecha}" placeholder="Ej: 28/04/2026" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de ingreso</label>
+                        <input type="text" th:field="*{horaIngreso}" placeholder="Ej: 08:00" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de salida</label>
+                        <input type="text" th:field="*{horaSalida}" placeholder="Ej: 16:00">
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-panel">
+                <h3>Lista de asistencias</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Personal</th>
+                        <th>Fecha</th>
+                        <th>Ingreso</th>
+                        <th>Salida</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${asistencias}">
+                        <td th:text="${a.id}"></td>
+                        <td th:text="${a.trabajador}"></td>
+                        <td th:text="${a.fecha}"></td>
+                        <td th:text="${a.horaIngreso}"></td>
+                        <td th:text="${a.horaSalida}"></td>
+                        <td>
+                            <a th:href="@{/asistencias/editar/{id}(id=${a.id})}" class="btn btn-secondary">Editar</a>
+                            <a th:href="@{/asistencias/eliminar/{id}(id=${a.id})}" class="btn btn-danger"
+                               onclick="return confirm('¿Eliminar esta asistencia?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>

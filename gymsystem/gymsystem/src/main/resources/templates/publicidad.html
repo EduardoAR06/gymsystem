@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicidad | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('publicidad')}"></div>
+    <main class="content">
+        <section class="hero">
+            <h2>Publicidad</h2>
+            <p>Gestión de campañas y promociones del gimnasio.</p>
+        </section>
+        <section class="cards">
+            <article class="card">
+                <h3>Promoción Mensual</h3>
+                <p>Descuento del 10% en membresías mensuales durante abril.</p>
+            </article>
+            <article class="card">
+                <h3>Referidos</h3>
+                <p>Trae un amigo y obtén una semana gratis.</p>
+            </article>
+            <article class="card">
+                <h3>Redes Sociales</h3>
+                <p>Síguenos en Instagram y obtén descuentos exclusivos.</p>
+            </article>
+        </section>
+    </main>
+</div>
+</body>
+</html>

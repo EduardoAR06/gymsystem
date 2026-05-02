@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cobros | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('cobros')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Registro de cobros</h2>
+        </section>
+
+        <div th:replace="~{fragments :: flash}"></div>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3 th:text="${editando} ? 'Editar cobro' : 'Nuevo cobro'">Formulario</h3>
+
+                <form th:if="${editando}" th:action="@{/cobros/actualizar}" method="post">
+                    <input type="hidden" th:field="*{cobro.id}">
+                    <div class="field">
+                        <label>Miembro</label>
+                        <select th:field="*{cobro.miembro}">
+                            <option th:each="m : ${miembros}" th:value="${m.nombres}" th:text="${m.nombres}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Monto (S/)</label>
+                        <input type="number" step="0.01" th:field="*{cobro.monto}" required>
+                    </div>
+                    <div class="field">
+                        <label>Método de pago</label>
+                        <select th:field="*{cobro.metodoPago}">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Yape">Yape</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Estado</label>
+                        <select th:field="*{cobro.estado}">
+                            <option value="Pagado">Pagado</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a th:href="@{/cobros}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+
+                <form th:unless="${editando}" th:action="@{/cobros/guardar}" method="post" th:object="${cobro}">
+                    <div class="field">
+                        <label>Miembro</label>
+                        <select th:field="*{miembro}">
+                            <option th:each="m : ${miembros}" th:value="${m.nombres}" th:text="${m.nombres}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Monto (S/)</label>
+                        <input type="number" step="0.01" th:field="*{monto}" placeholder="Ej: 120.00" required>
+                    </div>
+                    <div class="field">
+                        <label>Método de pago</label>
+                        <select th:field="*{metodoPago}">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Yape">Yape</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-panel">
+                <h3>Lista de cobros</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Miembro</th>
+                        <th>Monto</th>
+                        <th>Método</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${cobros}">
+                        <td th:text="${c.id}"></td>
+                        <td th:text="${c.miembro}"></td>
+                        <td>S/ <span th:text="${#numbers.formatDecimal(c.monto, 1, 2)}"></span></td>
+                        <td th:text="${c.metodoPago}"></td>
+                        <td>
+                            <span class="badge" th:classappend="${c.estado == 'Pendiente'} ? 'pending'"
+                                  th:text="${c.estado}"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/cobros/editar/{id}(id=${c.id})}" class="btn btn-secondary">Editar</a>
+                            <a th:href="@{/cobros/eliminar/{id}(id=${c.id})}" class="btn btn-danger"
+                               onclick="return confirm('¿Eliminar este cobro?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>
