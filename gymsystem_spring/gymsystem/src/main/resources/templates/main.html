@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('main')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Sistema de cobros y registros de membresías</h2>
+        </section>
+        <section class="cards">
+            <article class="card">
+                <h3>Miembros registrados</h3>
+                <p th:text="${totalMiembros} + ' miembros activos.'">0 miembros activos.</p>
+            </article>
+            <article class="card">
+                <h3>Membresías activas</h3>
+                <p th:text="${totalMembresias} + ' tipos de membresía.'">0 tipos de membresía.</p>
+            </article>
+            <article class="card">
+                <h3>Cobros registrados</h3>
+                <p>S/ <span th:text="${#numbers.formatDecimal(totalCobros, 1, 2)}">0.00</span></p>
+            </article>
+            <article class="card">
+                <h3>Asistencias marcadas</h3>
+                <p th:text="${totalAsistencias} + ' marcaciones.'">0 marcaciones.</p>
+            </article>
+        </section>
+    </main>
+</div>
+</body>
+</html>
