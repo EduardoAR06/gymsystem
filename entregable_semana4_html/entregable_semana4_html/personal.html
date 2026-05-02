@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal | Gym System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="img/logo.png" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>Personal</p>
+        </div>
+        <nav class="menu">
+            <a href="main.html">Volver al inicio</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Registro del personal</h2>
+        </section>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3>Formulario de personal</h3>
+                <div class="field">
+                    <label>Nombres</label>
+                    <input type="text" value="Rosa Salazar">
+                </div>
+                <div class="field">
+                    <label>Cargo</label>
+                    <input type="text" value="Recepcionista">
+                </div>
+                <div class="field">
+                    <label>Turno</label>
+                    <select>
+                        <option>Mañana</option>
+                        <option>Tarde</option>
+                        <option>Noche</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="mostrarMensaje('Personal guardado visualmente.')">Guardar</button>
+                </div>
+            </section>
+
+            <section class="table-panel">
+                <h3>Lista del personal</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Cargo</th>
+                        <th>Turno</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>1</td><td>Rosa Salazar</td><td>Recepcionista</td><td>Mañana</td></tr>
+                    <tr><td>2</td><td>Victor Diaz</td><td>Entrenador</td><td>Tarde</td></tr>
+                    <tr><td>3</td><td>Elena Soto</td><td>Limpieza</td><td>Mañana</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
