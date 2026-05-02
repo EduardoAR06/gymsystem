@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cobros | Gym System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="img/logo.png" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>Cobros</p>
+        </div>
+        <nav class="menu">
+            <a href="main.html">Volver al inicio</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Registro de cobros</h2>
+        </section>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3>Formulario de cobro</h3>
+                <div class="field">
+                    <label>Miembro</label>
+                    <select>
+                        <option>Carlos Ramos</option>
+                        <option>Maria Quispe</option>
+                        <option>Jorge Huaman</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Monto</label>
+                    <input type="text" value="120.00">
+                </div>
+                <div class="field">
+                    <label>Metodo de pago</label>
+                    <select>
+                        <option>Efectivo</option>
+                        <option>Yape</option>
+                        <option>Tarjeta</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="mostrarMensaje('Cobro registrado visualmente.')">Guardar</button>
+                </div>
+            </section>
+
+            <section class="table-panel">
+                <h3>Lista de cobros</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Miembro</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>1</td><td>Carlos Ramos</td><td>S/ 120</td><td><span class="badge">Pagado</span></td></tr>
+                    <tr><td>2</td><td>Maria Quispe</td><td>S/ 300</td><td><span class="badge">Pagado</span></td></tr>
+                    <tr><td>3</td><td>Jorge Huaman</td><td>S/ 120</td><td><span class="badge pending">Pendiente</span></td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
