@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Membresías | Sistema de Gimnasio</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/app.js}"></script>
+</head>
+<body>
+<div class="page-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <img th:src="@{/logo.png}" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>CRUD de membresías</p>
+        </div>
+        <a class="nav-link" th:href="@{/main}">Volver al inicio</a>
+    </aside>
+    <main class="main-content">
+        <section class="hero">
+            <h2>Tipos de membresía</h2>
+            <p>Permite registrar planes y precios que luego se asignan a los miembros.</p>
+        </section>
+
+        <div class="panel-grid">
+            <section class="form-card">
+                <h3 th:text="${formulario.id} != null ? 'Editar membresía' : 'Nueva membresía'"></h3>
+                <form th:action="@{/membresias/guardar}" th:object="${formulario}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="field-group">
+                        <label>Nombre</label>
+                        <input th:field="*{nombre}" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Precio mensual</label>
+                        <input th:field="*{precioMensual}" type="number" step="0.01" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Duración en días</label>
+                        <input th:field="*{duracionDias}" type="number" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Descripción</label>
+                        <textarea th:field="*{descripcion}"></textarea>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                        <a class="btn btn-secondary" th:href="@{/membresias}">Limpiar</a>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-card">
+                <h3>Lista de membresías</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Días</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="membresia : ${membresias}">
+                        <td th:text="${membresia.id}"></td>
+                        <td th:text="${membresia.nombre}"></td>
+                        <td th:text="${'S/ ' + #numbers.formatDecimal(membresia.precioMensual, 1, 2)}"></td>
+                        <td th:text="${membresia.duracionDias}"></td>
+                        <td th:text="${membresia.descripcion}"></td>
+                        <td>
+                            <a class="btn btn-secondary" th:href="@{'/membresias/editar/' + ${membresia.id}}">Editar</a>
+                            <a class="btn btn-danger" th:href="@{'/membresias/eliminar/' + ${membresia.id}}"
+                               onclick="return confirmarEliminacion()">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>
