@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Publicidad | Sistema de Gimnasio</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <img th:src="@{/logo.png}" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>Página estática de publicidad</p>
+        </div>
+        <a class="nav-link" th:href="@{/main}">Volver al inicio</a>
+    </aside>
+
+    <main class="main-content">
+        <section class="hero">
+            <h2>Publicidad del gimnasio</h2>
+            <p>Página estática para promocionar membresías y campañas del gimnasio.</p>
+        </section>
+
+        <section class="grid">
+            <div class="card">
+                <h3>Campaña 1</h3>
+                <p>Membresía mensual a S/ 120 con acceso libre a máquinas.</p>
+            </div>
+            <div class="card">
+                <h3>Campaña 2</h3>
+                <p>Plan trimestral con descuento para nuevos inscritos.</p>
+            </div>
+            <div class="card">
+                <h3>Campaña 3</h3>
+                <p>Entrenamiento funcional sabatino incluido para personal y socios.</p>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

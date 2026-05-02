@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Metricas | Sistema de Gimnasio</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <img th:src="@{/logo.png}" alt="Logo">
+            <h1>GYM SYSTEM</h1>
+            <p>Pagina dinamica de metricas</p>
+        </div>
+        <a class="nav-link" th:href="@{/main}">Volver al main</a>
+    </aside>
+
+    <main class="main-content">
+        <section class="hero">
+            <h2>Metricas simples del sistema</h2>
+            <p>Esta pagina te ayuda a explicar que el sistema transforma los registros en informacion resumida.</p>
+        </section>
+
+        <section class="grid">
+            <div class="card" th:each="item : ${resumen}">
+                <h3 th:text="${item.key}"></h3>
+                <p th:text="${item.value}"></p>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
