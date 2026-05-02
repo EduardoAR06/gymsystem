@@ -1,1 +1,1 @@
-GitHub para el sistema de cobros y membresias de un Gimnasio random GRUPO5
+Github proyecto de la semana 7
