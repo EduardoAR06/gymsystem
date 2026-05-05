@@ -1,30 +1,41 @@
 package com.gym.gymsystem.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Duration;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Asistencia {
     private Long id;
+    private Long personalId;
     private String trabajador;
-    private String fecha;
-    private String horaIngreso;
-    private String horaSalida;
+    private LocalDate fecha;
+    private LocalTime horaIngreso;
+    private LocalTime horaSalida;
 
-    public Asistencia() {}
+    // --- MEJORAS DE LÓGICA ---
+    private String tipoRegistro;
+    private String huellaSimulada;
 
-    public Asistencia(Long id, String trabajador, String fecha, String horaIngreso, String horaSalida) {
-        this.id = id;
-        this.trabajador = trabajador;
-        this.fecha = fecha;
-        this.horaIngreso = horaIngreso;
-        this.horaSalida = horaSalida;
+    /**
+     * Calcula los minutos trabajados entre ingreso y salida.
+     */
+    public Long getDuracionMinutos() {
+        if (horaIngreso != null && horaSalida != null) {
+            return Duration.between(horaIngreso, horaSalida).toMinutes();
+        }
+        return 0L;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getTrabajador() { return trabajador; }
-    public void setTrabajador(String trabajador) { this.trabajador = trabajador; }
-    public String getFecha() { return fecha; }
-    public void setFecha(String fecha) { this.fecha = fecha; }
-    public String getHoraIngreso() { return horaIngreso; }
-    public void setHoraIngreso(String horaIngreso) { this.horaIngreso = horaIngreso; }
-    public String getHoraSalida() { return horaSalida; }
-    public void setHoraSalida(String horaSalida) { this.horaSalida = horaSalida; }
+    /**
+     * Genera un hash simulado de seguridad.
+     */
+    public void generarHuellaDigital() {
+        this.huellaSimulada = "SHA256-" + (this.trabajador != null ? this.trabajador.hashCode() : "0") + "-" + this.fecha;
+    }
 }

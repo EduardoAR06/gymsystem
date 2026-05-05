@@ -14,16 +14,27 @@ public class MembresiaService {
     private final List<Membresia> membresias = new ArrayList<>();
     private final AtomicLong counter = new AtomicLong(1);
 
+    // Constructor: Creamos membresías por defecto para que el sistema no esté vacío
+    public MembresiaService() {
+        this.save(new Membresia(null, "Plan Mensual", 120.00, "30"));
+        this.save(new Membresia(null, "Plan Trimestral", 300.00, "90"));
+        this.save(new Membresia(null, "Plan Anual", 1000.00, "365"));
+    }
+
     public List<Membresia> findAll() {
         return new ArrayList<>(membresias);
     }
 
     public Optional<Membresia> findById(Long id) {
-        return membresias.stream().filter(m -> m.getId().equals(id)).findFirst();
+        return membresias.stream()
+                .filter(m -> m.getId().equals(id))
+                .findFirst();
     }
 
     public void save(Membresia membresia) {
-        membresia.setId(counter.getAndIncrement());
+        if (membresia.getId() == null) {
+            membresia.setId(counter.getAndIncrement());
+        }
         membresias.add(membresia);
     }
 

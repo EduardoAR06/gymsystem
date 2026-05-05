@@ -5,6 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistencias | GYM SYSTEM</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .kiosk-card {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .clock {
+            font-size: 3rem;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1.5rem;
+            color: #2ecc71;
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+        }
+        .biometric-btn {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-entrada { background: #27ae60; color: white; }
+        .btn-salida { background: #e67e22; color: white; }
+
+        .biometric-btn:disabled {
+            background: #7f8c8d !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .status-box {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
 </head>
 <body>
 <div class="layout">
@@ -12,91 +56,55 @@
 
     <main class="content">
         <section class="hero">
-            <h2>Marcación de asistencia</h2>
+            <h2>Estación de Marcación Biométrica</h2>
+            <p>Registro automático con validación de jornada laboral.</p>
         </section>
 
-        <div th:replace="~{fragments :: flash}"></div>
-
         <div class="panel-grid">
-            <section class="panel">
-                <h3 th:text="${editando} ? 'Editar asistencia' : 'Nueva asistencia'">Formulario</h3>
+            <section class="panel kiosk-card">
+                <div class="clock" id="liveClock">00:00:00</div>
 
-                <form th:if="${editando}" th:action="@{/asistencias/actualizar}" method="post">
-                    <input type="hidden" th:field="*{asistencia.id}">
-                    <div class="field">
-                        <label>Trabajador</label>
-                        <select th:field="*{asistencia.trabajador}">
-                            <option th:each="p : ${personales}" th:value="${p.nombres}" th:text="${p.nombres}"></option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Fecha</label>
-                        <input type="text" th:field="*{asistencia.fecha}" placeholder="Ej: 28/04/2026" required>
-                    </div>
-                    <div class="field">
-                        <label>Hora de ingreso</label>
-                        <input type="text" th:field="*{asistencia.horaIngreso}" placeholder="Ej: 08:00" required>
-                    </div>
-                    <div class="field">
-                        <label>Hora de salida</label>
-                        <input type="text" th:field="*{asistencia.horaSalida}" placeholder="Ej: 16:00">
-                    </div>
-                    <div class="actions">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                        <a th:href="@{/asistencias}" class="btn btn-secondary">Cancelar</a>
-                    </div>
-                </form>
+                <div class="field" style="text-align: left;">
+                    <label style="color: #bdc3c7;">Identificación del Personal (Simulación de Huella)</label>
+                    <select id="personal-id" onchange="cargarEstadoPersonal()" style="width: 100%; padding: 12px; border-radius: 5px;">
+                        <option value="">-- Seleccione Trabajador --</option>
+                        <option th:each="p : ${personales}" th:value="${p.id}" th:text="${p.nombres}"></option>
+                    </select>
+                </div>
 
-                <form th:unless="${editando}" th:action="@{/asistencias/guardar}" method="post" th:object="${asistencia}">
-                    <div class="field">
-                        <label>Trabajador</label>
-                        <select th:field="*{trabajador}">
-                            <option th:each="p : ${personales}" th:value="${p.nombres}" th:text="${p.nombres}"></option>
-                        </select>
+                <div id="controles-asistencia" style="display: none; margin-top: 20px;">
+                    <div class="status-box">
+                        Personal: <strong id="nombre-display" style="color:#3498db;"></strong><br>
+                        Estado: <span id="label-estado">Cargando...</span>
                     </div>
-                    <div class="field">
-                        <label>Fecha</label>
-                        <input type="text" th:field="*{fecha}" placeholder="Ej: 28/04/2026" required>
-                    </div>
-                    <div class="field">
-                        <label>Hora de ingreso</label>
-                        <input type="text" th:field="*{horaIngreso}" placeholder="Ej: 08:00" required>
-                    </div>
-                    <div class="field">
-                        <label>Hora de salida</label>
-                        <input type="text" th:field="*{horaSalida}" placeholder="Ej: 16:00">
-                    </div>
-                    <div class="actions">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
+
+                    <button id="btn-entrada" class="biometric-btn btn-entrada" onclick="procesarMarcacion('entrada')">
+                        ▲ REGISTRAR ENTRADA
+                    </button>
+
+                    <button id="btn-salida" class="biometric-btn btn-salida" onclick="procesarMarcacion('salida')" disabled>
+                        ▼ REGISTRAR SALIDA
+                    </button>
+                </div>
             </section>
 
             <section class="table-panel">
-                <h3>Lista de asistencias</h3>
+                <h3>Registros del Día: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></span></h3>
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Personal</th>
-                        <th>Fecha</th>
-                        <th>Ingreso</th>
+                        <th>Entrada</th>
                         <th>Salida</th>
-                        <th>Acciones</th>
+                        <th>Duración</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="a : ${asistencias}">
-                        <td th:text="${a.id}"></td>
                         <td th:text="${a.trabajador}"></td>
-                        <td th:text="${a.fecha}"></td>
-                        <td th:text="${a.horaIngreso}"></td>
-                        <td th:text="${a.horaSalida}"></td>
-                        <td>
-                            <a th:href="@{/asistencias/editar/{id}(id=${a.id})}" class="btn btn-secondary">Editar</a>
-                            <a th:href="@{/asistencias/eliminar/{id}(id=${a.id})}" class="btn btn-danger"
-                               onclick="return confirm('¿Eliminar esta asistencia?')">Eliminar</a>
-                        </td>
+                        <td style="color: #27ae60; font-weight: bold;" th:text="${a.horaIngreso}"></td>
+                        <td style="color: #e67e22; font-weight: bold;" th:text="${a.horaSalida != null ? a.horaSalida : '--:--'}"></td>
+                        <td th:text="${a.horaSalida != null ? a.getDuracionMinutos() + ' min' : 'En curso...'}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -104,5 +112,65 @@
         </div>
     </main>
 </div>
+
+<script>
+    // 1. Reloj en tiempo real
+    setInterval(() => {
+        document.getElementById('liveClock').textContent = new Date().toLocaleTimeString('es-PE');
+    }, 1000);
+
+    // 2. Cargar estado al seleccionar personal
+    function cargarEstadoPersonal() {
+        const id = document.getElementById('personal-id').value;
+        if (!id) {
+            document.getElementById('controles-asistencia').style.display = 'none';
+            return;
+        }
+
+        // Buscamos el nombre del trabajador seleccionado
+        const select = document.getElementById('personal-id');
+        const nombre = select.options[select.selectedIndex].text;
+        document.getElementById('nombre-display').textContent = nombre;
+        document.getElementById('controles-asistencia').style.display = 'block';
+
+        // Consultamos al backend si ya marcó hoy
+        fetch(`/miembros/api/asistencias/verificar/${id}`) // Ajusta la ruta según tu controller
+            .then(r => r.json())
+            .then(asistencia => {
+                const btnEntrada = document.getElementById('btn-entrada');
+                const btnSalida = document.getElementById('btn-salida');
+                const label = document.getElementById('label-estado');
+
+                if (!asistencia) {
+                    label.textContent = "Pendiente de Entrada";
+                    btnEntrada.disabled = false;
+                    btnSalida.disabled = true;
+                } else if (asistencia.horaSalida == null) {
+                    label.textContent = `Entrada registrada: ${asistencia.horaIngreso}`;
+                    btnEntrada.disabled = true;
+                    btnSalida.disabled = false;
+                } else {
+                    label.textContent = `Jornada Completa (${asistencia.duracionMinutos} min)`;
+                    btnEntrada.disabled = true;
+                    btnSalida.disabled = true;
+                }
+            }).catch(() => {
+            // Si la API de verificación no está lista, dejamos los botones activos
+            document.getElementById('label-estado').textContent = "Listo para marcar";
+        });
+    }
+
+    // 3. Procesar la marcación
+    function procesarMarcacion(tipo) {
+        const id = document.getElementById('personal-id').value;
+
+        // Llamada al método registrarEntrada o registrarSalida de tu Service
+        fetch(`/asistencias/marcar?personalId=${id}&tipo=${tipo}`, { method: 'POST' })
+            .then(r => {
+                if(r.ok) location.reload();
+                else alert("Error al registrar marcación");
+            });
+    }
+</script>
 </body>
 </html>

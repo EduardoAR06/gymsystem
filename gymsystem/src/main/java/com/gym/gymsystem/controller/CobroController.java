@@ -31,8 +31,11 @@ public class CobroController {
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Cobro cobro, RedirectAttributes ra) {
         cobro.setEstado("Pagado");
-        cobroService.save(cobro);
-        ra.addFlashAttribute("mensaje", "Cobro registrado correctamente.");
+
+        // CAMBIO AQUÍ: Usamos registrarCobro en lugar de save
+        cobroService.registrarCobro(cobro);
+
+        ra.addFlashAttribute("mensaje", "Cobro registrado. Membresía activada automáticamente.");
         return "redirect:/cobros";
     }
 

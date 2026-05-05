@@ -183,21 +183,155 @@ th {
     background: #f3f8fd;
 }
 
+/* =========================================
+   SISTEMA DE BADGES (ESTADOS DINÁMICOS)
+   ========================================= */
 .badge {
     display: inline-block;
     padding: 4px 10px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: bold;
-    background: #e8f5e9;
-    color: #256029;
+    text-align: center;
 }
 
+/* Estado por defecto / Activo */
+.bg-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Estado Suspendido / Inactivo (Modelo Claro) */
+.bg-danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Estado Por Vencer */
+.bg-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Mantengo tu estilo pending original por compatibilidad */
 .badge.pending {
     background: #fff3e0;
     color: #b26a00;
 }
 
+/* =========================================
+   BUSCADOR CON AUTOCOMPLETADO (COBROS)
+   ========================================= */
+.autocomplete-container {
+    position: relative;
+}
+
+.results-list {
+    position: absolute;
+    z-index: 100;
+    background: white;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    max-height: 250px;
+    overflow-y: auto;
+    display: none;
+}
+
+.result-item {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.result-item:hover {
+    background-color: #f0f4f8;
+}
+
+.result-item .dni {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-left: 5px;
+}
+
+.status-badge {
+    font-size: 0.75em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    float: right;
+    font-weight: bold;
+}
+
+/* =========================================
+   ESTACIÓN BIOMÉTRICA (ASISTENCIAS)
+   ========================================= */
+.kiosk-card {
+    background: #2c3e50;
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.kiosk-card h3 {
+    color: #ecf0f1;
+}
+
+.biometric-btn {
+    width: 100%;
+    padding: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.btn-entrada {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-entrada:hover {
+    background: #2ecc71;
+    transform: scale(1.02);
+}
+
+.btn-salida {
+    background: #e67e22;
+    color: white;
+}
+
+.btn-salida:hover {
+    background: #f39c12;
+    transform: scale(1.02);
+}
+
+.status-msg {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+    display: none;
+    font-weight: bold;
+}
+
+.clock {
+    font-size: 3rem;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 1rem;
+    color: #3498db;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* =========================================
+   OTROS ESTILOS ORIGINALES
+   ========================================= */
 .route-list {
     display: grid;
     gap: 12px;
@@ -265,6 +399,16 @@ th {
     font-size: 22px;
 }
 
+.alert-success {
+    background: #e8f5e9;
+    border: 1px solid #81c784;
+    color: #2e7d32;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
 @media (max-width: 920px) {
     .layout {
         flex-direction: column;
@@ -281,14 +425,4 @@ th {
     .panel-grid {
         grid-template-columns: 1fr;
     }
-}
-
-.alert-success {
-    background: #e8f5e9;
-    border: 1px solid #81c784;
-    color: #2e7d32;
-    padding: 12px 18px;
-    border-radius: 10px;
-    margin-bottom: 16px;
-    font-weight: bold;
 }

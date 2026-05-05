@@ -12,7 +12,8 @@
 
     <main class="content">
         <section class="hero">
-            <h2>Registro de cobros</h2>
+            <h2>Gestión de Cobros y Membresías</h2>
+            <p>Activación automática de servicios tras validación de pago.</p>
         </section>
 
         <div th:replace="~{fragments :: flash}"></div>
@@ -21,91 +22,72 @@
             <section class="panel">
                 <h3 th:text="${editando} ? 'Editar cobro' : 'Nuevo cobro'">Formulario</h3>
 
-                <form th:if="${editando}" th:action="@{/cobros/actualizar}" method="post">
-                    <input type="hidden" th:field="*{cobro.id}">
-                    <div class="field">
-                        <label>Miembro</label>
-                        <select th:field="*{cobro.miembro}">
-                            <option th:each="m : ${miembros}" th:value="${m.nombres}" th:text="${m.nombres}"></option>
+                <div class="field" style="background: #f0f7ff; padding: 15px; border-radius: 10px; border: 1px solid #c2d9f7;">
+                    <label><strong>1. Buscar Miembro</strong></label>
+                    <div style="display: flex; gap: 5px; margin-bottom: 8px;">
+                        <select id="criterio-busqueda" style="width: 30%;">
+                            <option value="DNI">DNI</option>
+                            <option value="NOMBRES">Nombre</option>
                         </select>
+                        <input type="text" id="valor-busqueda" placeholder="Escriba para buscar..." onkeyup="ejecutarBusqueda()" style="flex: 1;">
                     </div>
-                    <div class="field">
-                        <label>Monto (S/)</label>
-                        <input type="number" step="0.01" th:field="*{cobro.monto}" required>
-                    </div>
-                    <div class="field">
-                        <label>Método de pago</label>
-                        <select th:field="*{cobro.metodoPago}">
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Yape">Yape</option>
-                            <option value="Tarjeta">Tarjeta</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Estado</label>
-                        <select th:field="*{cobro.estado}">
-                            <option value="Pagado">Pagado</option>
-                            <option value="Pendiente">Pendiente</option>
-                        </select>
-                    </div>
-                    <div class="actions">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                        <a th:href="@{/cobros}" class="btn btn-secondary">Cancelar</a>
-                    </div>
-                </form>
+                    <div id="resultados-busqueda" class="results-list" style="display:none; position: static; width: 100%; border: 1px solid #ddd; background: white; max-height: 150px; overflow-y: auto;"></div>
+                </div>
 
-                <form th:unless="${editando}" th:action="@{/cobros/guardar}" method="post" th:object="${cobro}">
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+                <form th:action="${editando} ? @{/cobros/actualizar} : @{/cobros/guardar}" method="post" th:object="${cobro}">
+                    <input type="hidden" th:field="*{id}">
+
                     <div class="field">
-                        <label>Miembro</label>
-                        <select th:field="*{miembro}">
-                            <option th:each="m : ${miembros}" th:value="${m.nombres}" th:text="${m.nombres}"></option>
-                        </select>
+                        <label>Miembro Seleccionado</label>
+                        <input type="hidden" id="miembro-id" name="miembroId" th:value="${cobro.miembroId}">
+                        <input type="text" id="miembro-seleccionado" th:field="*{miembro}" readonly
+                               style="background: #e9ecef; font-weight: bold; color: #1565c0;" placeholder="Nadie seleccionado">
                     </div>
+
                     <div class="field">
-                        <label>Monto (S/)</label>
-                        <input type="number" step="0.01" th:field="*{monto}" placeholder="Ej: 120.00" required>
+                        <label>Monto a Pagar (S/)</label>
+                        <input type="number" step="0.01" th:field="*{monto}" placeholder="0.00" required>
                     </div>
+
                     <div class="field">
-                        <label>Método de pago</label>
+                        <label>Método de Pago</label>
                         <select th:field="*{metodoPago}">
                             <option value="Efectivo">Efectivo</option>
-                            <option value="Yape">Yape</option>
+                            <option value="Yape/Plin">Yape/Plin</option>
                             <option value="Tarjeta">Tarjeta</option>
+                            <option value="Transferencia">Transferencia</option>
                         </select>
                     </div>
+
                     <div class="actions">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span th:text="${editando} ? 'Actualizar Pago' : 'Registrar Pago y Activar'"></span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
                     </div>
                 </form>
             </section>
 
             <section class="table-panel">
-                <h3>Lista de cobros</h3>
+                <h3>Historial de Transacciones</h3>
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Miembro</th>
                         <th>Monto</th>
                         <th>Método</th>
-                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="c : ${cobros}">
-                        <td th:text="${c.id}"></td>
                         <td th:text="${c.miembro}"></td>
                         <td>S/ <span th:text="${#numbers.formatDecimal(c.monto, 1, 2)}"></span></td>
-                        <td th:text="${c.metodoPago}"></td>
+                        <td><span class="badge" th:text="${c.metodoPago}"></span></td>
                         <td>
-                            <span class="badge" th:classappend="${c.estado == 'Pendiente'} ? 'pending'"
-                                  th:text="${c.estado}"></span>
-                        </td>
-                        <td>
-                            <a th:href="@{/cobros/editar/{id}(id=${c.id})}" class="btn btn-secondary">Editar</a>
-                            <a th:href="@{/cobros/eliminar/{id}(id=${c.id})}" class="btn btn-danger"
-                               onclick="return confirm('¿Eliminar este cobro?')">Eliminar</a>
+                            <a th:href="@{/cobros/editar/{id}(id=${c.id})}" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">Detalles</a>
                         </td>
                     </tr>
                     </tbody>
@@ -114,5 +96,59 @@
         </div>
     </main>
 </div>
+
+<script>
+    function ejecutarBusqueda() {
+        const criterio = document.getElementById('criterio-busqueda').value;
+        const valor = document.getElementById('valor-busqueda').value;
+        const contenedor = document.getElementById('resultados-busqueda');
+
+        if (valor.length < 2) {
+            contenedor.style.display = 'none';
+            return;
+        }
+
+        // Llamada al endpoint que configuramos en MiembroService/Controller
+        fetch(`/miembros/api/buscar?term=${valor}`)
+            .then(response => response.json())
+            .then(data => {
+                contenedor.innerHTML = '';
+                if (data.length > 0) {
+                    data.forEach(m => {
+                        const div = document.createElement('div');
+                        div.className = 'result-item'; // Clase definida en tu CSS
+                        div.style.padding = '10px';
+                        div.style.cursor = 'pointer';
+                        div.style.borderBottom = '1px solid #eee';
+                        div.innerHTML = `
+                            <strong>${m.nombre}</strong> <small>(${m.dni})</small>
+                            <span class="badge ${m.estado === 'ACTIVO' ? 'bg-success' : 'bg-danger'}"
+                                  style="float:right; font-size:10px;">${m.estado}</span>
+                        `;
+                        div.onclick = () => seleccionarMiembro(m.id, m.nombre);
+                        contenedor.appendChild(div);
+                    });
+                    contenedor.style.display = 'block';
+                } else {
+                    contenedor.innerHTML = '<div style="padding:10px; color:red;">No se encontraron socios.</div>';
+                    contenedor.style.display = 'block';
+                }
+            });
+    }
+
+    function seleccionarMiembro(id, nombre) {
+        document.getElementById('miembro-id').value = id;
+        document.getElementById('miembro-seleccionado').value = nombre;
+        document.getElementById('resultados-busqueda').style.display = 'none';
+        document.getElementById('valor-busqueda').value = '';
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('miembro-id').value = '';
+        document.getElementById('miembro-seleccionado').value = '';
+        document.getElementById('resultados-busqueda').style.display = 'none';
+        document.getElementById('valor-busqueda').value = '';
+    }
+</script>
 </body>
 </html>

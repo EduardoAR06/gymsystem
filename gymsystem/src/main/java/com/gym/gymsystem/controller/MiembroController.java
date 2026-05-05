@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/miembros")
 public class MiembroController {
@@ -16,6 +18,8 @@ public class MiembroController {
     public MiembroController(MiembroService miembroService) {
         this.miembroService = miembroService;
     }
+
+    // --- VISTAS (HTML) ---
 
     @GetMapping
     public String listar(Model model) {
@@ -53,5 +57,27 @@ public class MiembroController {
         miembroService.deleteById(id);
         ra.addFlashAttribute("mensaje", "Miembro eliminado correctamente.");
         return "redirect:/miembros";
+    }
+
+    // --- APIS PARA EL BUSCADOR (JSON) ---
+
+    /**
+     * Búsqueda por término general (DNI o Nombre).
+     * Es la que usa el autocompletado rápido.
+     */
+    @GetMapping("/api/buscar")
+    @ResponseBody
+    public List<Miembro> buscarApi(@RequestParam("term") String query) {
+        return miembroService.buscarPorTermino(query);
+    }
+
+    /**
+     * Búsqueda avanzada por criterio.
+     * Ideal para filtros específicos en reportes.
+     */
+    @GetMapping("/api/filtrar")
+    @ResponseBody
+    public List<Miembro> filtrar(@RequestParam String criterio, @RequestParam String valor) {
+        return miembroService.buscarPor(criterio, valor);
     }
 }
