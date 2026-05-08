@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head> <meta charset="UTF-8"> <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body> <!-- Fragment: Sidebar con menú según rol -->
+<div th:fragment="sidebar(active)"> <aside class="sidebar"> <div class="brand"> <img th:src="@{/img/logo.png}" alt="Logo"> <h1>GYM SYSTEM</h1> </div> <!-- Info del usuario logueado --> <div class="user-info" th:if="${usuario != null}"> <span class="user-name" th:text="${usuario.nombres}">Usuario</span> <span class="user-rol badge" th:text="${usuario.rol}">ROL</span> </div> <nav class="menu"> <!-- Todos los roles ven Inicio --> <a th:href="@{/main}" th:classappend="${active == 'main'} ? 'active'"> Inicio</a>
+ <!-- Todos los roles ven Publicidad y Contacto --> <a th:href="@{/publicidad}" th:classappend="${active == 'publicidad'} ? 'active'"> Publicidad</a> <a th:href="@{/contacto}" th:classappend="${active == 'contacto'} ? 'active'"> Contacto</a>
+ <!-- ADMIN y MIEMBROS: Miembros, Membresías, Cobros --> <th:block th:if="${usuario != null and (usuario.rol == 'ADMIN' or usuario.rol == 'MIEMBROS')}"> <a th:href="@{/miembros}" th:classappend="${active == 'miembros'} ? 'active'"> Miembros</a> <a th:href="@{/membresias}" th:classappend="${active == 'membresias'} ? 'active'"> Membresías</a> <a th:href="@{/cobros}" th:classappend="${active == 'cobros'} ? 'active'"> Cobros</a> </th:block>
+ <!-- ADMIN y ASISTENCIAS: Personal, Asistencias --> <th:block th:if="${usuario != null and (usuario.rol == 'ADMIN' or usuario.rol == 'ASISTENCIAS')}"> <a th:href="@{/personal}" th:classappend="${active == 'personal'} ? 'active'"> Personal</a> <a th:href="@{/asistencias}" th:classappend="${active == 'asistencias'} ? 'active'"> Asistencias</a> </th:block>
+ <!-- Solo ADMIN: Gestión y Usuarios --> <th:block th:if="${usuario != null and usuario.rol == 'ADMIN'}"> <a th:href="@{/gestion}" th:classappend="${active == 'gestion'} ? 'active'"> Gestión</a> <a th:href="@{/usuarios}" th:classappend="${active == 'usuarios'} ? 'active'"> Usuarios</a> </th:block>
+ <a th:href="@{/logout}" class="logout-link"> Cerrar sesión</a> </nav> </aside>
+</div> <!-- Fragment: Flash message -->
+<div th:fragment="flash"> <div th:if="${mensaje}" class="alert-success" th:text="${mensaje}"></div>
+</div> </body>
+</html>

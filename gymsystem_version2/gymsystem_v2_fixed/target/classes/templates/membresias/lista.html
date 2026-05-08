@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membresías | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('membresias')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Tipos de membresía</h2>
+        </section>
+
+        <div th:replace="~{fragments :: flash}"></div>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3 th:text="${editando} ? 'Editar membresía' : 'Nueva membresía'">Formulario</h3>
+
+                <form th:if="${editando}" th:action="@{/membresias/actualizar}" method="post">
+                    <input type="hidden" th:field="*{membresia.id}">
+                    <div class="field">
+                        <label>Nombre del plan</label>
+                        <input type="text" th:field="*{membresia.plan}" required>
+                    </div>
+                    <div class="field">
+                        <label>Precio (S/)</label>
+                        <input type="number" step="0.01" th:field="*{membresia.precio}" required>
+                    </div>
+                    <div class="field">
+                        <label>Duración</label>
+                        <input type="text" th:field="*{membresia.duracion}" required>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a th:href="@{/membresias}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+
+                <form th:unless="${editando}" th:action="@{/membresias/guardar}" method="post" th:object="${membresia}">
+                    <div class="field">
+                        <label>Nombre del plan</label>
+                        <input type="text" th:field="*{plan}" placeholder="Ej: Mensual" required>
+                    </div>
+                    <div class="field">
+                        <label>Precio (S/)</label>
+                        <input type="number" step="0.01" th:field="*{precio}" placeholder="Ej: 120.00" required>
+                    </div>
+                    <div class="field">
+                        <label>Duración</label>
+                        <input type="text" th:field="*{duracion}" placeholder="Ej: 30 días" required>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-panel">
+                <h3>Lista de membresías</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Plan</th>
+                        <th>Precio</th>
+                        <th>Duración</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m : ${membresias}">
+                        <td th:text="${m.id}"></td>
+                        <td th:text="${m.plan}"></td>
+                        <td>S/ <span th:text="${#numbers.formatDecimal(m.precio, 1, 2)}"></span></td>
+                        <td th:text="${m.duracion}"></td>
+                        <td>
+                            <a th:href="@{/membresias/editar/{id}(id=${m.id})}" class="btn btn-secondary">Editar</a>
+                            <a th:href="@{/membresias/eliminar/{id}(id=${m.id})}" class="btn btn-danger"
+                               onclick="return confirm('¿Eliminar esta membresía?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>

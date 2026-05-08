@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencias | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('asistencias')}"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h2>Control de Asistencias</h2>
+            <p>Registro de ingreso y salida del personal del gimnasio</p>
+        </section>
+
+        <div th:replace="~{fragments :: flash}"></div>
+
+        <div class="panel-grid">
+            <section class="panel">
+                <h3 th:text="${editando} ? 'Editar asistencia' : 'Registrar asistencia'">Formulario</h3>
+
+                <form th:if="${editando}" th:action="@{/asistencias/actualizar}" method="post">
+                    <input type="hidden" th:field="*{asistencia.id}">
+                    <div class="field">
+                        <label>Personal</label>
+                        <select th:field="*{asistencia.trabajador}">
+                            <option th:each="p : ${personales}" th:value="${p.nombres}" th:text="${p.nombres + ' — ' + p.cargo}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Fecha</label>
+                        <input type="date" th:field="*{asistencia.fecha}" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de ingreso</label>
+                        <input type="time" th:field="*{asistencia.horaIngreso}" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de salida</label>
+                        <input type="time" th:field="*{asistencia.horaSalida}">
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a th:href="@{/asistencias}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+
+                <form th:unless="${editando}" th:action="@{/asistencias/guardar}" method="post" th:object="${asistencia}">
+                    <div class="field">
+                        <label>Personal</label>
+                        <select th:field="*{trabajador}">
+                            <option value="">-- Seleccionar --</option>
+                            <option th:each="p : ${personales}" th:value="${p.nombres}"
+                                    th:text="${p.nombres + ' — ' + p.cargo}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Fecha</label>
+                        <input type="date" th:field="*{fecha}" th:value="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de ingreso</label>
+                        <input type="time" th:field="*{horaIngreso}" required>
+                    </div>
+                    <div class="field">
+                        <label>Hora de salida <small>(opcional)</small></label>
+                        <input type="time" th:field="*{horaSalida}">
+                    </div>
+                    <div class="hint">💡 La hora de salida puede registrarse después.</div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Registrar Ingreso</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-panel">
+                <h3>Registro de asistencias</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Trabajador</th>
+                        <th>Fecha</th>
+                        <th>Ingreso</th>
+                        <th>Salida</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${asistencias}">
+                        <td th:text="${a.id}"></td>
+                        <td th:text="${a.trabajador}"></td>
+                        <td th:text="${a.fecha}"></td>
+                        <td th:text="${a.horaIngreso}"></td>
+                        <td>
+                            <span th:if="${a.horaSalida != null and !a.horaSalida.isEmpty()}" th:text="${a.horaSalida}"></span>
+                            <span th:unless="${a.horaSalida != null and !a.horaSalida.isEmpty()}" class="badge-warn">Pendiente</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/asistencias/editar/{id}(id=${a.id})}" class="btn btn-secondary">Editar</a>
+                            <a th:href="@{/asistencias/eliminar/{id}(id=${a.id})}" class="btn btn-danger"
+                               onclick="return confirm('¿Eliminar este registro?')">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>

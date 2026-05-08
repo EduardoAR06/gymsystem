@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Gestión | GYM SYSTEM</title> <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout"> <div th:replace="~{fragments :: sidebar('gestion')}"></div> <main class="content"> <section class="hero"> <h2> Panel de Gestión</h2> <p>Vista general del estado del gimnasio — solo visible para Administradores</p> </section> <div class="stats-grid"> <div class="stat-card"> <h4>Total Miembros</h4> <p class="stat-num" th:text="${totalMiembros}">0</p> </div> <div class="stat-card stat-green"> <h4>Miembros Activos</h4> <p class="stat-num" th:text="${miembrosActivos}">0</p> </div> <div class="stat-card"> <h4>Total Recaudado (S/)</h4> <p class="stat-num" th:text="${#numbers.formatDecimal(totalCobros, 1, 2)}">0.00</p> </div> <div class="stat-card"> <h4>Personal registrado</h4> <p class="stat-num" th:text="${totalPersonal}">0</p> </div> <div class="stat-card"> <h4>Asistencias registradas</h4> <p class="stat-num" th:text="${totalAsistencias}">0</p> </div> </div> </main>
+</div>
+</body>
+</html>
