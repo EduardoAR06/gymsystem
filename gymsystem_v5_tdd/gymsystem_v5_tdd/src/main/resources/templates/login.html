@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso | GYM SYSTEM</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="login-page">
+<div class="login-card">
+  <img th:src="@{/img/logo.png}" alt="Logo">
+  <h2>GYM SYSTEM</h2>
+  <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+  <form action="/login" method="post">
+    <div class="field">
+      <label for="username">Usuario</label>
+      <input id="username" name="username" type="text" placeholder="Admin" required>
+    </div>
+    <div class="field">
+      <label for="password">Contrasena</label>
+      <input id="password" name="password" type="password" placeholder="1234" required>
+    </div>
+    <div class="hint">
+      <small>
+        <b>Admin</b> (Administrador) &nbsp;&middot;&nbsp;
+        <b>RecepMem</b> (Recep. Membresias) &nbsp;&middot;&nbsp;
+        <b>RecepAsis</b> (Recep. Asistencias) &nbsp;&middot;&nbsp;
+        <b>Entrenador</b> &mdash; clave: <b>1234</b>
+      </small>
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Ingresar</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

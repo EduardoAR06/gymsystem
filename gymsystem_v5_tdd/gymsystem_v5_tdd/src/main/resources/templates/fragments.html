@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head><meta charset="UTF-8"><link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+
+<div th:fragment="sidebar(active)">
+  <aside class="sidebar">
+    <div class="brand">
+      <img th:src="@{/img/logo.png}" alt="Logo">
+      <h1>GYM SYSTEM</h1>
+    </div>
+
+    <div class="user-info" th:if="${usuario != null}">
+      <span class="user-name" th:text="${usuario.nombres}">Usuario</span>
+      <span class="user-rol badge"
+            th:classappend="${usuario.rol == 'ADMIN'} ? ' badge-admin' :
+                             (${usuario.rol == 'RECEP_MEM'}  ? ' badge-recep'  :
+                             (${usuario.rol == 'RECEP_ASIS'} ? ' badge-recep2' : ' badge-entren'))"
+            th:text="${usuario.rolNombre}">ROL</span>
+    </div>
+
+    <nav class="menu">
+      <!-- Acceso general: todos los roles -->
+      <a th:href="@{/main}"       th:classappend="${active == 'main'}       ? 'active'">Inicio</a>
+      <a th:href="@{/publicidad}" th:classappend="${active == 'publicidad'} ? 'active'">Publicidad</a>
+      <a th:href="@{/contacto}"   th:classappend="${active == 'contacto'}   ? 'active'">Contacto</a>
+
+      <!-- ADMIN y RECEP_MEM: Clientes, Categorias, Cobros -->
+      <th:block th:if="${usuario != null and (usuario.rol == 'ADMIN' or usuario.rol == 'RECEP_MEM')}">
+        <div class="menu-section">Gestion de Clientes</div>
+        <a th:href="@{/miembros}"   th:classappend="${active == 'miembros'}   ? 'active'">Clientes</a>
+        <a th:href="@{/membresias}" th:classappend="${active == 'membresias'} ? 'active'">Categorias</a>
+        <a th:href="@{/cobros}"     th:classappend="${active == 'cobros'}     ? 'active'">Cobros</a>
+      </th:block>
+
+      <!-- ADMIN y RECEP_ASIS: Personal, Asistencias -->
+      <th:block th:if="${usuario != null and (usuario.rol == 'ADMIN' or usuario.rol == 'RECEP_ASIS')}">
+        <div class="menu-section">Gestion de Personal</div>
+        <a th:href="@{/personal}"    th:classappend="${active == 'personal'}    ? 'active'">Personal</a>
+        <a th:href="@{/asistencias}" th:classappend="${active == 'asistencias'} ? 'active'">Asistencias</a>
+      </th:block>
+
+      <!-- ENTRENADOR: solo consulta Personal, sin acceso a Asistencias -->
+      <th:block th:if="${usuario != null and usuario.rol == 'ENTRENADOR'}">
+        <div class="menu-section">Mi area</div>
+        <a th:href="@{/personal}" th:classappend="${active == 'personal'} ? 'active'">Personal</a>
+      </th:block>
+
+      <!-- Solo ADMIN: Panel general y Usuarios del sistema -->
+      <th:block th:if="${usuario != null and usuario.rol == 'ADMIN'}">
+        <div class="menu-section">Administracion</div>
+        <a th:href="@{/gestion}"  th:classappend="${active == 'gestion'}  ? 'active'">Panel General</a>
+        <a th:href="@{/usuarios}" th:classappend="${active == 'usuarios'} ? 'active'">Usuarios</a>
+      </th:block>
+
+      <a th:href="@{/logout}" class="logout-link">Cerrar sesion</a>
+    </nav>
+  </aside>
+</div>
+
+<div th:fragment="flash">
+  <div th:if="${mensaje}" class="alert-success" th:text="${mensaje}"></div>
+  <div th:if="${error}"   class="alert-error"   th:text="${error}"></div>
+</div>
+
+</body>
+</html>

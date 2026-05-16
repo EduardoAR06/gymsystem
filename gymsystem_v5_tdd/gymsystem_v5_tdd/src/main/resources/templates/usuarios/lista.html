@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios | GYM SYSTEM</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+  <div th:replace="~{fragments :: sidebar('usuarios')}"></div>
+  <main class="content">
+    <section class="hero">
+      <h2>Gestion de Usuarios</h2>
+      <p>Solo el Administrador puede crear y gestionar accesos al sistema</p>
+    </section>
+    <div th:replace="~{fragments :: flash}"></div>
+
+    <div class="panel-grid">
+      <section class="panel">
+        <h3 th:text="${editando} ? 'Editar usuario' : 'Nuevo usuario'">Formulario</h3>
+
+        <form th:if="${editando}" th:action="@{/usuarios/actualizar}" method="post">
+          <input type="hidden" th:field="*{usuario.id}">
+          <div class="field"><label>Nombre completo</label>
+            <input type="text" th:field="*{usuario.nombres}" required></div>
+          <div class="field"><label>Username</label>
+            <input type="text" th:field="*{usuario.username}" required></div>
+          <div class="field"><label>Contrasena</label>
+            <input type="password" th:field="*{usuario.password}" required></div>
+          <div class="field">
+            <label>Rol</label>
+            <select th:field="*{usuario.rol}">
+              <option value="ADMIN">Administrador — acceso total al sistema</option>
+              <option value="RECEP_MEM">Recep. Membresias — Clientes, Categorias y Cobros</option>
+              <option value="RECEP_ASIS">Recep. Asistencias — Personal y Asistencias</option>
+              <option value="ENTRENADOR">Entrenador — consulta de Personal (solo lectura)</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <a th:href="@{/usuarios}" class="btn btn-secondary">Cancelar</a>
+          </div>
+        </form>
+
+        <form th:unless="${editando}" th:action="@{/usuarios/guardar}" method="post" th:object="${usuario}">
+          <div class="field"><label>Nombre completo</label>
+            <input type="text" th:field="*{nombres}" placeholder="Ej: Maria Lopez" required></div>
+          <div class="field"><label>Username</label>
+            <input type="text" th:field="*{username}" placeholder="Ej: maria.lopez" required></div>
+          <div class="field"><label>Contrasena</label>
+            <input type="password" th:field="*{password}" placeholder="Contrasena" required></div>
+          <div class="field">
+            <label>Rol</label>
+            <select th:field="*{rol}">
+              <option value="ADMIN">Administrador — acceso total al sistema</option>
+              <option value="RECEP_MEM">Recep. Membresias — Clientes, Categorias y Cobros</option>
+              <option value="RECEP_ASIS">Recep. Asistencias — Personal y Asistencias</option>
+              <option value="ENTRENADOR">Entrenador — consulta de Personal (solo lectura)</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+
+        <!-- Referencia de permisos por rol -->
+        <div style="margin-top:1.5rem; background:#f8f9fa; border-radius:8px; padding:1rem; font-size:.85rem;">
+          <p style="font-weight:600; margin-bottom:.5rem;">Referencia de permisos por rol</p>
+          <table style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background:#ecf0f1;">
+              <th style="padding:.4rem .6rem; text-align:left;">Modulo</th>
+              <th style="padding:.4rem; text-align:center;">Admin</th>
+              <th style="padding:.4rem; text-align:center;">Recep. Mem.</th>
+              <th style="padding:.4rem; text-align:center;">Recep. Asis.</th>
+              <th style="padding:.4rem; text-align:center;">Entrenador</th>
+            </tr></thead>
+            <tbody>
+            <tr><td style="padding:.35rem .6rem;">Inicio / Publicidad / Contacto</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10003;</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10003;</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:.35rem .6rem;">Clientes</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10003;</td>
+              <td style="text-align:center;">&#10007;</td><td style="text-align:center;">&#10007;</td></tr>
+            <tr><td style="padding:.35rem .6rem;">Categorias de Membresia</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10003;</td>
+              <td style="text-align:center;">&#10007;</td><td style="text-align:center;">&#10007;</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:.35rem .6rem;">Cobros</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10003;</td>
+              <td style="text-align:center;">&#10007;</td><td style="text-align:center;">&#10007;</td></tr>
+            <tr><td style="padding:.35rem .6rem;">Personal (edicion)</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10007;</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10007;</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:.35rem .6rem;">Personal (consulta)</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10007;</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10003;</td></tr>
+            <tr><td style="padding:.35rem .6rem;">Asistencias</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10007;</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10007;</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:.35rem .6rem;">Panel General / Usuarios</td>
+              <td style="text-align:center;">&#10003;</td><td style="text-align:center;">&#10007;</td>
+              <td style="text-align:center;">&#10007;</td><td style="text-align:center;">&#10007;</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="table-panel">
+        <h3>Usuarios registrados</h3>
+        <table>
+          <thead>
+          <tr><th>ID</th><th>Nombre</th><th>Username</th><th>Rol</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+          <tr th:each="u : ${usuarios}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.nombres}"></td>
+            <td th:text="${u.username}"></td>
+            <td>
+              <span class="badge"
+                    th:classappend="${u.rol == 'ADMIN'} ? ' badge-admin' :
+                                    (${u.rol == 'RECEP_MEM'}  ? ' badge-recep'  :
+                                    (${u.rol == 'RECEP_ASIS'} ? ' badge-recep2' : ' badge-entren'))"
+                    th:text="${u.rolNombre}"></span>
+            </td>
+            <td>
+              <a th:href="@{/usuarios/editar/{id}(id=${u.id})}" class="btn btn-secondary">Editar</a>
+              <a th:href="@{/usuarios/eliminar/{id}(id=${u.id})}" class="btn btn-danger"
+                 onclick="return confirm('Eliminar este usuario?')">Eliminar</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>

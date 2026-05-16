@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistencias | GYM SYSTEM</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+  <div th:replace="~{fragments :: sidebar('asistencias')}"></div>
+  <main class="content">
+    <section class="hero">
+      <h2>Control de Asistencias del Personal</h2>
+      <p>La fecha y hora se registran automaticamente desde el servidor. No se permite doble ingreso ni doble salida en la misma jornada.</p>
+    </section>
+
+    <div th:replace="~{fragments :: flash}"></div>
+
+    <div class="panel-grid">
+      <section class="panel">
+        <h3>Registrar Ingreso</h3>
+        <form th:action="@{/asistencias/ingreso}" method="post" style="margin-bottom:1.5rem;">
+          <div class="field">
+            <label>Personal</label>
+            <select name="trabajador" required>
+              <option value="">-- Seleccionar --</option>
+              <option th:each="p : ${personales}" th:value="${p.nombres}"
+                      th:text="${p.nombres + ' - ' + p.cargo}"></option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Registrar Ingreso</button>
+          </div>
+        </form>
+
+        <h3>Registrar Salida</h3>
+        <form th:action="@{/asistencias/salida}" method="post">
+          <div class="field">
+            <label>Personal</label>
+            <select name="trabajador" required>
+              <option value="">-- Seleccionar --</option>
+              <option th:each="p : ${personales}" th:value="${p.nombres}"
+                      th:text="${p.nombres + ' - ' + p.cargo}"></option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-secondary">Registrar Salida</button>
+          </div>
+        </form>
+
+        <div th:if="${editando}" style="margin-top:2rem; border-top:1px solid #ddd; padding-top:1rem;">
+          <h3>Corregir registro</h3>
+          <form th:action="@{/asistencias/actualizar}" method="post">
+            <input type="hidden" th:field="*{asistencia.id}">
+            <div class="field">
+              <label>Trabajador</label>
+              <input type="text" th:field="*{asistencia.trabajador}" readonly>
+            </div>
+            <div class="field">
+              <label>Fecha</label>
+              <input type="date" th:field="*{asistencia.fecha}" required>
+            </div>
+            <div class="field">
+              <label>Hora de Ingreso</label>
+              <input type="time" th:field="*{asistencia.horaIngreso}" required>
+            </div>
+            <div class="field">
+              <label>Hora de Salida</label>
+              <input type="time" th:field="*{asistencia.horaSalida}">
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+              <a th:href="@{/asistencias}" class="btn btn-secondary">Cancelar</a>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="table-panel">
+        <h3>Historial de Asistencias</h3>
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th><th>Trabajador</th><th>Fecha</th><th>Ingreso</th><th>Salida</th><th>Estado</th><th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="a : ${asistencias}">
+            <td th:text="${a.id}"></td>
+            <td th:text="${a.trabajador}"></td>
+            <td th:text="${a.fecha}"></td>
+            <td th:text="${a.horaIngreso}"></td>
+            <td>
+              <span th:if="${a.horaSalida != null}" th:text="${a.horaSalida}"></span>
+              <span th:unless="${a.horaSalida != null}" class="badge-warn">Pendiente</span>
+            </td>
+            <td>
+              <span th:if="${a.horaSalida != null}" class="badge">Completa</span>
+              <span th:unless="${a.horaSalida != null}" class="badge badge-inactivo">En curso</span>
+            </td>
+            <td>
+              <a th:href="@{/asistencias/editar/{id}(id=${a.id})}" class="btn btn-secondary">Corregir</a>
+              <a th:href="@{/asistencias/eliminar/{id}(id=${a.id})}" class="btn btn-danger"
+                 onclick="return confirm('Eliminar este registro?')">Eliminar</a>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(asistencias)}">
+            <td colspan="7" style="text-align:center; color:#888;">Sin registros.</td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>

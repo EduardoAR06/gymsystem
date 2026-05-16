@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal | GYM SYSTEM</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+  <div th:replace="~{fragments :: sidebar('personal')}"></div>
+  <main class="content">
+    <section class="hero">
+      <h2>Gestion de Personal</h2>
+      <p th:text="${usuario != null and usuario.rol == 'ENTRENADOR'} ?
+          'Vista de consulta — el rol Entrenador no tiene permisos de edicion en este modulo' :
+          'Registro de entrenadores, recepcionistas y personal del gimnasio'"></p>
+    </section>
+    <div th:replace="~{fragments :: flash}"></div>
+
+    <div class="panel-grid">
+
+      <!-- Formulario: solo ADMIN y RECEP_ASIS -->
+      <section class="panel" th:if="${usuario != null and usuario.puedeEditarPersonal()}">
+        <h3 th:text="${editando} ? 'Editar registro de personal' : 'Nuevo registro de personal'">Formulario</h3>
+
+        <form th:if="${editando}" th:action="@{/personal/actualizar}" method="post">
+          <input type="hidden" th:field="*{personal.id}">
+          <div class="field"><label>Nombres</label>
+            <input type="text" th:field="*{personal.nombres}" required></div>
+          <div class="field">
+            <label>Cargo</label>
+            <select th:field="*{personal.cargo}">
+              <optgroup label="Entrenamiento">
+                <option value="Entrenador General">Entrenador General</option>
+                <option value="Personal Trainer">Personal Trainer</option>
+                <option value="Instructor de Spinning">Instructor de Spinning</option>
+                <option value="Instructor de Yoga / Pilates">Instructor de Yoga / Pilates</option>
+                <option value="Instructor de Crossfit">Instructor de Crossfit</option>
+                <option value="Instructor de Zumba / Baile">Instructor de Zumba / Baile</option>
+                <option value="Instructor de Natacion">Instructor de Natacion</option>
+                <option value="Instructor de Artes Marciales">Instructor de Artes Marciales</option>
+              </optgroup>
+              <optgroup label="Recepcion y Administracion">
+                <option value="Recepcionista">Recepcionista</option>
+                <option value="Cajero">Cajero</option>
+                <option value="Coordinador de Membresias">Coordinador de Membresias</option>
+              </optgroup>
+              <optgroup label="Soporte y Mantenimiento">
+                <option value="Personal de Limpieza">Personal de Limpieza</option>
+                <option value="Mantenimiento">Mantenimiento</option>
+                <option value="Seguridad / Vigilancia">Seguridad / Vigilancia</option>
+              </optgroup>
+              <optgroup label="Salud y Bienestar">
+                <option value="Nutricionista">Nutricionista</option>
+                <option value="Fisioterapeuta">Fisioterapeuta</option>
+                <option value="Medico Deportivo">Medico Deportivo</option>
+              </optgroup>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Turno</label>
+            <select th:field="*{personal.turno}">
+              <option value="Manana">Manana (6am - 2pm)</option>
+              <option value="Tarde">Tarde (2pm - 10pm)</option>
+              <option value="Noche">Noche (10pm - 6am)</option>
+              <option value="Completo">Jornada completa</option>
+              <option value="Parcial">Parcial / Por horas</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <a th:href="@{/personal}" class="btn btn-secondary">Cancelar</a>
+          </div>
+        </form>
+
+        <form th:unless="${editando}" th:action="@{/personal/guardar}" method="post" th:object="${personal}">
+          <div class="field"><label>Nombres</label>
+            <input type="text" th:field="*{nombres}" placeholder="Ej: Carlos Gomez" required></div>
+          <div class="field">
+            <label>Cargo</label>
+            <select th:field="*{cargo}">
+              <optgroup label="Entrenamiento">
+                <option value="Entrenador General">Entrenador General</option>
+                <option value="Personal Trainer">Personal Trainer</option>
+                <option value="Instructor de Spinning">Instructor de Spinning</option>
+                <option value="Instructor de Yoga / Pilates">Instructor de Yoga / Pilates</option>
+                <option value="Instructor de Crossfit">Instructor de Crossfit</option>
+                <option value="Instructor de Zumba / Baile">Instructor de Zumba / Baile</option>
+                <option value="Instructor de Natacion">Instructor de Natacion</option>
+                <option value="Instructor de Artes Marciales">Instructor de Artes Marciales</option>
+              </optgroup>
+              <optgroup label="Recepcion y Administracion">
+                <option value="Recepcionista">Recepcionista</option>
+                <option value="Cajero">Cajero</option>
+                <option value="Coordinador de Membresias">Coordinador de Membresias</option>
+              </optgroup>
+              <optgroup label="Soporte y Mantenimiento">
+                <option value="Personal de Limpieza">Personal de Limpieza</option>
+                <option value="Mantenimiento">Mantenimiento</option>
+                <option value="Seguridad / Vigilancia">Seguridad / Vigilancia</option>
+              </optgroup>
+              <optgroup label="Salud y Bienestar">
+                <option value="Nutricionista">Nutricionista</option>
+                <option value="Fisioterapeuta">Fisioterapeuta</option>
+                <option value="Medico Deportivo">Medico Deportivo</option>
+              </optgroup>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Turno</label>
+            <select th:field="*{turno}">
+              <option value="Manana">Manana (6am - 2pm)</option>
+              <option value="Tarde">Tarde (2pm - 10pm)</option>
+              <option value="Noche">Noche (10pm - 6am)</option>
+              <option value="Completo">Jornada completa</option>
+              <option value="Parcial">Parcial / Por horas</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Panel informativo para Entrenadores (solo lectura) -->
+      <section class="panel" th:if="${usuario != null and usuario.rol == 'ENTRENADOR'}">
+        <h3>Acceso restringido</h3>
+        <p class="hint" style="margin-top:.5rem;">
+          El rol Entrenador permite consultar la lista del personal en modo de solo lectura.
+          Para realizar modificaciones, comuniquese con el Administrador.
+        </p>
+      </section>
+
+      <!-- Tabla de personal (visible para todos los roles con acceso al modulo) -->
+      <section class="table-panel">
+        <h3>Lista de personal</h3>
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th><th>Nombre</th><th>Cargo</th><th>Turno</th>
+            <th th:if="${usuario != null and usuario.puedeEditarPersonal()}">Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="p : ${personales}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.nombres}"></td>
+            <td th:text="${p.cargo}"></td>
+            <td th:text="${p.turno}"></td>
+            <td th:if="${usuario != null and usuario.puedeEditarPersonal()}">
+              <a th:href="@{/personal/editar/{id}(id=${p.id})}" class="btn btn-secondary">Editar</a>
+              <a th:href="@{/personal/eliminar/{id}(id=${p.id})}" class="btn btn-danger"
+                 onclick="return confirm('Eliminar este registro?')">Eliminar</a>
+            </td>
+          </tr>
+          <tr th:if="${personales.isEmpty()}">
+            <td colspan="5" style="text-align:center; color:#888; padding:1rem;">Sin personal registrado.</td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>

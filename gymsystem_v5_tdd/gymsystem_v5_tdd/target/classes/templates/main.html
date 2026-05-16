@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio | GYM SYSTEM</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="layout">
+    <div th:replace="~{fragments :: sidebar('main')}"></div>
+    <main class="content">
+        <section class="hero">
+            <h2 th:text="'Bienvenido, ' + (${usuario != null ? usuario.nombres : 'Usuario'})">Usuario</h2>
+            <p th:text="'Rol: ' + (${usuario != null ? usuario.rolNombre : ''})">Rol</p>
+        </section>
+
+        <!-- Estadisticas para ADMIN, RECEP_MEM y RECEP_ASIS -->
+        <div class="stats-grid" th:if="${usuario != null and (usuario.rol == 'ADMIN' or usuario.rol == 'RECEP_MEM')}">
+            <div class="stat-card">
+                <h4>Total Clientes</h4>
+                <p class="stat-num" th:text="${totalMiembros}">0</p>
+            </div>
+            <div class="stat-card stat-green">
+                <h4>Clientes Activos</h4>
+                <p class="stat-num" th:text="${miembrosActivos}">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>Total Recaudado</h4>
+                <p class="stat-num">S/ <span th:text="${#numbers.formatDecimal(totalCobros, 1, 2)}">0.00</span></p>
+            </div>
+            <div class="stat-card">
+                <h4>Asistencias Registradas</h4>
+                <p class="stat-num" th:text="${totalAsistencias}">0</p>
+            </div>
+        </div>
+
+        <div class="stats-grid" th:if="${usuario != null and usuario.rol == 'RECEP_ASIS'}">
+            <div class="stat-card">
+                <h4>Asistencias Registradas</h4>
+                <p class="stat-num" th:text="${totalAsistencias}">0</p>
+            </div>
+        </div>
+
+        <div class="stats-grid" th:if="${usuario != null and usuario.rol == 'ENTRENADOR'}">
+            <div class="stat-card">
+                <h4>Acceso disponible</h4>
+                <p style="font-size:.9rem; color:#666;">Consulte la lista de personal desde el menu lateral.</p>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

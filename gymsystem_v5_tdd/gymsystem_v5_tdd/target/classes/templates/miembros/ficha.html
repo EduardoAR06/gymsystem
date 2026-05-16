@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha del Cliente | GYM SYSTEM</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <style>
+    .ficha-header { display:flex; align-items:center; gap:1.5rem; margin-bottom:1.5rem; }
+    .ficha-avatar { width:64px; height:64px; border-radius:50%; background:var(--primary,#e05c2c);
+                    display:flex; align-items:center; justify-content:center;
+                    font-size:1.6rem; font-weight:700; color:#fff; flex-shrink:0; }
+    .ficha-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .ficha-card { background:#fff; border-radius:10px; padding:1.2rem 1.4rem;
+                  box-shadow:0 2px 8px rgba(0,0,0,.08); }
+    .ficha-card h4 { margin:0 0 .8rem; font-size:.85rem; color:#888; text-transform:uppercase; letter-spacing:.06em; border-bottom:1px solid #eee; padding-bottom:.5rem; }
+    .ficha-dato { display:flex; justify-content:space-between; padding:.35rem 0;
+                  border-bottom:1px solid #f5f5f5; font-size:.93rem; }
+    .ficha-dato:last-child { border-bottom:none; }
+    .ficha-dato span:first-child { color:#666; }
+    .ficha-dato span:last-child { font-weight:600; }
+    .dias-bloque { text-align:center; margin-top:.8rem; }
+    .dias-num { font-size:2.4rem; font-weight:800; }
+    .dias-num.ok     { color:#16a34a; }
+    .dias-num.warn   { color:#d97706; }
+    .dias-num.vencido{ color:#dc2626; }
+    .dias-label { font-size:.82rem; color:#888; margin-top:.2rem; }
+    .alerta-vencido  { margin-top:.6rem; color:#dc2626; font-weight:600; font-size:.9rem; }
+    .alerta-proxvenc { margin-top:.6rem; color:#d97706; font-weight:600; font-size:.9rem; }
+    .hist-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    .hist-table th { text-align:left; padding:.5rem .7rem; background:#f5f5f5; font-weight:600; border-bottom:2px solid #e0e0e0; }
+    .hist-table td { padding:.42rem .7rem; border-bottom:1px solid #f0f0f0; }
+    .hist-empty { text-align:center; color:#aaa; padding:1.5rem; font-size:.9rem; }
+    @media(max-width:700px){ .ficha-grid{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <div th:replace="~{fragments :: sidebar('miembros')}"></div>
+  <main class="content">
+
+    <section class="hero" style="margin-bottom:1rem;">
+      <div class="ficha-header">
+        <div class="ficha-avatar" th:text="${#strings.substring(miembro.nombres,0,1)}">?</div>
+        <div>
+          <h2 style="margin:0 0 .3rem;" th:text="${miembro.nombres}">Nombre</h2>
+          <span class="badge"
+                th:classappend="${miembro.estado == 'Inactivo'} ? ' badge-inactivo'"
+                th:text="${miembro.estado}">Estado</span>
+        </div>
+      </div>
+      <a th:href="@{/miembros}" class="btn btn-secondary">Volver a clientes</a>
+    </section>
+
+    <div class="ficha-grid">
+
+      <!-- Datos personales del cliente -->
+      <div class="ficha-card">
+        <h4>Datos del cliente</h4>
+        <div class="ficha-dato"><span>ID</span><span th:text="${miembro.id}"></span></div>
+        <div class="ficha-dato"><span>Nombres</span><span th:text="${miembro.nombres}"></span></div>
+        <div class="ficha-dato"><span>DNI</span><span th:text="${miembro.dni}"></span></div>
+        <div class="ficha-dato"><span>Telefono</span>
+          <span th:text="${miembro.telefono != null and !#strings.isEmpty(miembro.telefono)} ? ${miembro.telefono} : 'No registrado'"></span>
+        </div>
+      </div>
+
+      <!-- Estado de membresia y dias restantes -->
+      <div class="ficha-card">
+        <h4>Membresia activa</h4>
+        <div class="ficha-dato"><span>Plan</span><span th:text="${miembro.membresia}"></span></div>
+        <div class="ficha-dato"><span>Fecha de vencimiento</span><span th:text="${miembro.fechaVencimiento}"></span></div>
+        <div class="dias-bloque">
+          <div class="dias-num"
+               th:classappend="${miembro.diasRestantes > 10} ? ' ok' : (${miembro.diasRestantes > 0} ? ' warn' : ' vencido')"
+               th:text="${miembro.diasRestantes}">0</div>
+          <div class="dias-label">dias restantes</div>
+          <div class="alerta-vencido"  th:if="${miembro.diasRestantes == 0}">Membresia vencida</div>
+          <div class="alerta-proxvenc" th:if="${miembro.diasRestantes > 0 and miembro.diasRestantes <= 5}">Proxima a vencer</div>
+        </div>
+      </div>
+
+      <!-- Historial de cobros del cliente -->
+      <div class="ficha-card" style="grid-column: 1 / -1;">
+        <h4>Historial de cobros</h4>
+        <table class="hist-table" th:if="${!#lists.isEmpty(historialCobros)}">
+          <thead>
+          <tr>
+            <th>ID</th><th>Fecha</th><th>Plan pagado</th><th>Monto</th><th>Metodo de pago</th><th>Estado</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="c : ${historialCobros}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.fecha}"></td>
+            <td th:text="${c.planPagado}"></td>
+            <td>S/ <span th:text="${#numbers.formatDecimal(c.monto, 1, 2)}"></span></td>
+            <td th:text="${c.metodoPago}"></td>
+            <td><span class="badge" th:text="${c.estado}"></span></td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="hist-empty" th:if="${#lists.isEmpty(historialCobros)}">
+          Sin cobros registrados para este cliente.
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>
